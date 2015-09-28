@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/bcprov-jdk15on-152.jar"/>
+	<classpathentry kind="lib" path="lib/zxing-javase.jar"/>
+	<classpathentry kind="lib" path="lib/bridj-0.6.2.jar"/>
+	<classpathentry kind="lib" path="lib/core-2.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.35-bin.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.2.jar"/>
+	<classpathentry kind="lib" path="lib/webcam-capture-0.3.10.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
