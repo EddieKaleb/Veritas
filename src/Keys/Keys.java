@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -17,6 +18,8 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 import org.bouncycastle.crypto.encodings.PKCS1Encoding;
+
+import sun.misc.IOUtils;
 
 
 
@@ -50,32 +53,47 @@ public class Keys {
 	    setPK(pair.getPrivate());
 	}
 	
+	public Keys(PrivateKey pk, PublicKey pu){
+		setPK(pk);
+		setPU(pu);
+		
+	}
+	
 	/**
 	 * Method that store the keys.
 	 * @throws IOException
 	 */
 	public void storeKeys() throws IOException{
-		X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec( getPU().getEncoded() );
-		FileOutputStream fos = new FileOutputStream(path + "/public.key");
-		fos.write(x509EncodedKeySpec.getEncoded());
-		fos.close();
-		
-		PKCS8EncodedKeySpec pkcs1EncodedKeySpec = new PKCS8EncodedKeySpec(getPK().getEncoded());
-		fos = new FileOutputStream(path + "/private.key");
-		fos.write(pkcs1EncodedKeySpec.getEncoded());
-		fos.close();
+		//PU
+		X509EncodedKeySpec x509ks = new X509EncodedKeySpec(
+	            PU.getEncoded());
+	    FileOutputStream fos = new FileOutputStream(path + "/PU/");
+	    fos.write(x509ks.getEncoded());
+	    //PK
+	    PKCS8EncodedKeySpec pkcsKeySpec = new PKCS8EncodedKeySpec(
+	            PK.getEncoded());
+	    FileOutputStream fosK = new FileOutputStream(path + "/PK/");
+	    fos.write(pkcsKeySpec.getEncoded());
 	}
 	
 	/**
-	 * Incomplete
-	 * @return
+	 * Method that load keys
+	 * @return Keys
 	 */
 	
 	public Keys loadKeys(){
-		File filePublicKey = new File(path + "./public.Key");
-		FileInputStream fis = new FileInputStream(path + "./public.Key");
-		byte[] encodedPublicKey = new byte[(int) filePublicKey.length()];
-		
+		//PU
+		byte[] encodedKey = IOUtils.toByteArray(new FileInputStream(path + "/PU/"));
+	    KeyFactory keyFactory = KeyFactory.getInstance(RSA, BC);
+	    X509EncodedKeySpec pkSpec = new X509EncodedKeySpec(
+	            encodedKey);
+	    PublicKey publicKey = keyFactory.generatePublic(pkSpec);
+		//PK
+	    byte[] encodedKeyPK = IOUtils.toByteArray(new FileInputStream(path + "/PK/"));
+	    KeyFactory keyFactoryP = KeyFactory.getInstance(RSA, BC);
+	    PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(
+	            encodedKeyPK);
+	    PrivateKey privateKey = keyFactoryP.generatePrivate(privKeySpec);
 	}
 	
 	/*--------------------------------------------------------------------*/
