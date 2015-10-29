@@ -28,30 +28,26 @@ import Keys.Keys;
 public class Crypto {
 	private final String RSA = "RSA/ECB/PKCS1Padding";
 	private final String BC = "BC";
-	private Keys keys;
+	private PublicKey PU;
+	private PrivateKey PK;
 	
 	
 
-	private SecureRandom random ;
+
 	private Cipher cipher ;
 
 	public Crypto() throws Exception {
 	    Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 	    cipher = Cipher.getInstance(RSA, BC);
-	    Keys keys = new Keys();
-	    random = keys.getRandom();
-	    setKeys(keys);
+	    KeyPair keys = Keys.loadKeys();
+	    setPK(keys.getPrivate());
+	    setPU(keys.getPublic());
+	    
 	    
 	}
 	
 
-	public Crypto(Keys keys) throws Exception {
-	    Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-	    cipher = Cipher.getInstance(RSA, BC);
-	    random = keys.getRandom();
-	    setKeys(keys);
-	    
-	}
+
 	
 	
 	/**
@@ -73,7 +69,7 @@ public class Crypto {
 	 * @throws Exception
 	 */
 	public final String decrypt(String text) throws Exception{
-		return new String(decoded(Convert.hex2byte(text.getBytes()), keys.getPU()));
+		return new String(decoded(Convert.hex2byte(text.getBytes()), PU));
 	}
 	
 	
@@ -89,8 +85,8 @@ public class Crypto {
 	
 	private final byte[] cipher(String text) throws Exception{
 		 
-
-		 cipher.init(Cipher.ENCRYPT_MODE, keys.getPK(), random);
+		SecureRandom random = new SecureRandom();
+		 cipher.init(Cipher.ENCRYPT_MODE, PK, random);
 		 byte[] encrypt = cipher.doFinal(text.getBytes());
 		 return encrypt;	 
 	}
@@ -106,16 +102,43 @@ public class Crypto {
 		byte[] decrypted = cipher.doFinal(encrypt);
 		return decrypted;
 	}
+
+
+
+
+
+	public PublicKey getPU() {
+		return PU;
+	}
+
+
+
+
+
+	public void setPU(PublicKey pU) {
+		PU = pU;
+	}
+
+
+
+
+
+	public PrivateKey getPK() {
+		return PK;
+	}
+
+
+
+
+
+	public void setPK(PrivateKey pK) {
+		PK = pK;
+	}
 	
 	
 	
 	
     
-    public Keys getKeys() {
-		return keys;
-	}
-	public void setKeys(Keys keys) {
-		this.keys = keys;
-	}
+   
 	
 }

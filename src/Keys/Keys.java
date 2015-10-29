@@ -1,10 +1,6 @@
 package Keys;
 
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -17,23 +13,19 @@ import java.security.Security;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
-import org.bouncycastle.crypto.encodings.PKCS1Encoding;
-
-import sun.misc.IOUtils;
 
 
 
 
 
 public class Keys {
-	private final String path = "/users/thayanneLuiza/Documents/CertifQ/";
+	private static final String path = "/users/thayanneLuiza/Documents/Veritas/";
 	private final String RSA = "RSA/ECB/PKCS1Padding";
 	private final String BC = "BC";
 	
-	private PrivateKey PK;
-	private PublicKey PU;
+
 	
-	private SecureRandom random = new SecureRandom();
+	
 
 	
 	/**
@@ -41,89 +33,85 @@ public class Keys {
 	 * @throws NoSuchAlgorithmException
 	 * @throws NoSuchProviderException
 	 */
-	public Keys() throws NoSuchAlgorithmException, NoSuchProviderException{
+	public static KeyPair createKeys() throws NoSuchAlgorithmException, NoSuchProviderException{
+		SecureRandom random = new SecureRandom();
 	    Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
-		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", BC);
+		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", "BC");
 
 	    generator.initialize(1028, random);
 
 	    KeyPair pair = generator.generateKeyPair();
-	    setPU(pair.getPublic());
-	    setPK(pair.getPrivate());
+	   
+	    return pair;
 	}
 	
-	public Keys(PrivateKey pk, PublicKey pu){
-		setPK(pk);
-		setPU(pu);
-		
-	}
+	
 	
 	/**
 	 * Method that store the keys.
 	 * @throws IOException
+	 * @throws NoSuchProviderException 
+	 * @throws NoSuchAlgorithmException 
 	 */
-	public void storeKeys() throws IOException{
-		//PU
-		X509EncodedKeySpec x509ks = new X509EncodedKeySpec(
-	            PU.getEncoded());
-	    FileOutputStream fos = new FileOutputStream(path + "/PU/");
-	    fos.write(x509ks.getEncoded());
-	    //PK
-	    PKCS8EncodedKeySpec pkcsKeySpec = new PKCS8EncodedKeySpec(
-	            PK.getEncoded());
-	    FileOutputStream fosK = new FileOutputStream(path + "/PK/");
-	    fos.write(pkcsKeySpec.getEncoded());
+	public static void storeKeys() throws IOException, NoSuchAlgorithmException, NoSuchProviderException{
+		KeyPair keys = createKeys();
+		PrivateKey PK = keys.getPrivate();
+		PublicKey PU = keys.getPublic();
+		
+		
+ 
+		// Store Public Key.
+		X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
+				PU.getEncoded());
+		FileOutputStream fos = new FileOutputStream(path + "/public.key");
+		fos.write(x509EncodedKeySpec.getEncoded());
+		fos.close();
+ 
+		// Store Private Key.
+		PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
+				PK.getEncoded());
+		fos = new FileOutputStream(path + "/private.key");
+		fos.write(pkcs8EncodedKeySpec.getEncoded());
+		fos.close();
 	}
 	
 	/**
 	 * Method that load keys
 	 * @return Keys
+	 * @throws Exception 
 	 */
 	
-	public Keys loadKeys(){
-		//PU
-		byte[] encodedKey = IOUtils.toByteArray(new FileInputStream(path + "/PU/"));
-	    KeyFactory keyFactory = KeyFactory.getInstance(RSA, BC);
-	    X509EncodedKeySpec pkSpec = new X509EncodedKeySpec(
-	            encodedKey);
-	    PublicKey publicKey = keyFactory.generatePublic(pkSpec);
-		//PK
-	    byte[] encodedKeyPK = IOUtils.toByteArray(new FileInputStream(path + "/PK/"));
-	    KeyFactory keyFactoryP = KeyFactory.getInstance(RSA, BC);
-	    PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(
-	            encodedKeyPK);
-	    PrivateKey privateKey = keyFactoryP.generatePrivate(privKeySpec);
+	public static KeyPair loadKeys() throws Exception{
+		// Read Public Key.
+		File filePublicKey = new File(path + "/public.key");
+		FileInputStream fis = new FileInputStream(path + "/public.key");
+		byte[] encodedPublicKey = new byte[(int) filePublicKey.length()];
+		fis.read(encodedPublicKey);
+		fis.close();
+ 
+		// Read Private Key.
+		File filePrivateKey = new File(path + "/private.key");
+		fis = new FileInputStream(path + "/private.key");
+		byte[] encodedPrivateKey = new byte[(int) filePrivateKey.length()];
+		fis.read(encodedPrivateKey);
+		fis.close();
+ 
+		// Generate KeyPair.
+		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+		X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
+				encodedPublicKey);
+		PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+ 
+		PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(
+				encodedPrivateKey);
+		PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
+ 
+		return new KeyPair(publicKey, privateKey);
+		
 	}
 	
-	/*--------------------------------------------------------------------*/
-	public SecureRandom getRandom() {
-		return random;
-	}
-
-
-	public void setRandom(SecureRandom random) {
-		this.random = random;
-	}
+	
 	/*--------------------------------------------------------------------*/
 
-	public PrivateKey getPK() {
-		return PK;
-	}
-
-
-	public void setPK(PrivateKey pK) {
-		PK = pK;
-	}
-
-	/*--------------------------------------------------------------------*/
-
-	public PublicKey getPU() {
-		return PU;
-	}
-
-
-	public void setPU(PublicKey pU) {
-		PU = pU;
-	}
 }
