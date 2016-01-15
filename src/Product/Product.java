@@ -1,9 +1,14 @@
-package Product;
+/**
+ * Class
+ */
+
+package product;
 
 public class Product {
 	private String id;
 	private String name;
 	private boolean valid;
+	private String description;
 	
 	public Product(String id){
 		setId(id);
@@ -30,6 +35,18 @@ public class Product {
 	}
 	public void setValid(boolean valid) {
 		this.valid = valid;
+	}
+
+
+
+	public String getDescription() {
+		return description;
+	}
+
+
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 }

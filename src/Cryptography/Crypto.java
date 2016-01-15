@@ -1,6 +1,6 @@
 
 
-package Cryptography;
+package cryptography;
 
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -17,8 +17,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 
-import Convert.Convert;
-import Keys.Keys;
+import keys.KeysPersistence;
+import convert.Convert;
 
 /**
  * This class has methods to encrypt and decrypt.
@@ -39,7 +39,7 @@ public class Crypto {
 	public Crypto() throws Exception {
 	    Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 	    cipher = Cipher.getInstance(RSA, BC);
-	    KeyPair keys = Keys.loadKeys();
+	    KeyPair keys = KeysPersistence.loadKeys();
 	    setPK(keys.getPrivate());
 	    setPU(keys.getPublic());
 	    

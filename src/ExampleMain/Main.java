@@ -1,7 +1,10 @@
 package ExampleMain;
 
-import Cryptography.Crypto;
-import Keys.Keys;
+import javax.swing.JOptionPane;
+
+import qrCode.QRCode;
+import reader.Reader;
+import cryptography.Crypto;
 
 
 public class Main {
@@ -13,6 +16,12 @@ public class Main {
 			 System.out.println(encrypted);
 			 String decrypted = crypto.decrypt(encrypted);
 			 System.out.println(decrypted);
+			 
+			 
+			 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Lerigou");
+			 QRCode qr = new QRCode(encrypted);
+			 System.out.println(Reader.readQr());
+			 
 			 
 			 
 		} catch (Exception e) {

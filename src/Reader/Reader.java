@@ -1,6 +1,6 @@
-package Reader;
+package reader;
 
-import Cryptography.Crypto;
+import cryptography.Crypto;
 
 
 
@@ -12,9 +12,10 @@ import Cryptography.Crypto;
 
 public class Reader  {
 	public static String readQr() throws Exception{
-		Crypto c = new Crypto();
+		new WebcamQRCode();
 		String data = WebCam.init();
-		return(c.decrypt(data));	
+		
+		return(data);	
 	}
 	
 	

@@ -1,4 +1,4 @@
-package QRCode;
+package qrCode;
 
 import java.awt.Color;
 
@@ -31,7 +31,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
  *
  */
 public class QRCode {
-	private static String filePath = "/users/thayanneLuiza/Documents/CertifQ/QRCode.png";
+	private static String filePath = "/users/thayanneLuiza/Documents/Veritas/QRCode.png/";
     private String type = "png";
     private int size = 300;
     /**

@@ -1,4 +1,4 @@
-package Reader;
+package reader;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;

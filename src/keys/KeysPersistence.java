@@ -1,4 +1,4 @@
-package Keys;
+package keys;
 
 import java.io.*;
 import java.security.KeyFactory;
@@ -18,7 +18,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 
 
-public class Keys {
+public class KeysPersistence {
 	private static final String path = "/users/thayanneLuiza/Documents/Veritas/";
 	private final String RSA = "RSA/ECB/PKCS1Padding";
 	private final String BC = "BC";

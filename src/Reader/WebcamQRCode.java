@@ -1,4 +1,4 @@
-package Reader;
+package reader;
 
 
 import java.awt.Dimension;
@@ -37,7 +37,7 @@ public class WebcamQRCode extends JFrame implements Runnable, ThreadFactory {
 		super();
 
 		setLayout(new FlowLayout());
-		setTitle("CertifQ");
+		setTitle("Veritas");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Dimension size = WebcamResolution.QVGA.getSize();
